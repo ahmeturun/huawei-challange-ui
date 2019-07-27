@@ -4,6 +4,9 @@
         ["transform-class-properties", { "spec": true }],
         "transform-decorators",
         "transform-object-rest-spread",
-        "react-hot-loader/babel"
+        ["transform-runtime", {
+          "regenerator": true
+        }],
+        "react-hot-loader/babel",
       ]
 }

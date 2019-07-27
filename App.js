@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SignUpForm from './src/components/SignUpForm.js';
+import SignUpForm from './src/components/SignUpComponent.js';
 import './src/components/SignUpForm.css';
 import 'bootstrap/dist/css/bootstrap.css';
 

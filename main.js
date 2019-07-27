@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.js';
+import AllRoutes from './src/components/AllRoutesComponent.js';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+import 'bootstrap/dist/css/bootstrap.css';
+
+const routing = (
+    <AllRoutes></AllRoutes>
+  )
+
+ReactDOM.render(routing, document.getElementById('app'));

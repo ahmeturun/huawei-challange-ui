@@ -15,11 +15,17 @@
     margin-top: 20px;
     margin-bottom: 5px;
   }
+
+  .formContainer {
+    margin: auto;
+    width: 400px;
+    margin-top: 30px;
+  }
   
   form.signUpForm {
     padding: 0 40px;
     margin: auto;
-    width: 30%;
+    width: 360px;
   }
   
   form.signUpForm input {
@@ -45,14 +51,9 @@
   }
   
   form.signUpForm button {
-    display: block;
     width: 100%;
-    appearance: none;
-    border-radius: 5px;
-    border: none;
-    font-size: 16px;
     height: 40px;
-    margin-top: 30px;
+    margin-top: 20px;
   }
 
   .inputItem {

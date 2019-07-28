@@ -33,7 +33,9 @@ export default class SignUpForm extends React.Component {
       },
       show: false,
       value: '',
-      toListView: false
+      toListView: false,
+      loginName: '',
+      loginPass: ''
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -71,17 +73,43 @@ export default class SignUpForm extends React.Component {
     return !isDisabled;
   }
 
-  logInClick = (evt) => {
-    evt.preventDefault();
-    console.log("assss");
-  }
-
   handleClose = () => {
     this.setState({ show: false });
   }
 
   handleShow = () => {
     this.setState({ show: true });
+  }
+
+  hadleLogin = (e) => {
+    const { loginName, loginPass } = this.state;
+
+    fetch(`http://localhost:8090/Login?name=${loginName}&password=${loginPass}`,{
+      method: 'POST'
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.text().then((res) => {
+            Authentication.setUser(res, this.state.loginName);
+            this.setState(() => ({
+              toListView: true
+            }))
+          });
+        }
+        else {
+          response.text().then((res) => {
+            alert(JSON.parse(res).error);
+          });
+        }
+      });
+  }
+
+  handleLoginNameChange = (e) => {
+    this.setState({loginName: e.target.value});
+  }
+
+  handleLoginPassChange = (e) => {
+    this.setState({loginPass: e.target.value});
   }
 
   getValidationState() {
@@ -110,7 +138,7 @@ export default class SignUpForm extends React.Component {
       .then((response) => {
         if (response.ok) {
           response.text().then((res) => {
-            Authentication.setUser(res);
+            Authentication.setUser(res, this.state.username);
             this.setState(() => ({
               toListView: true
             }))
@@ -199,21 +227,21 @@ export default class SignUpForm extends React.Component {
                     <ControlLabel>User Name</ControlLabel>
                     <FormControl
                       type="text"
-                      value={this.state.value}
+                      value={this.state.loginName}
                       placeholder="user name"
-                      onChange={this.handleChange}/>
+                      onChange={this.handleLoginNameChange}/>
                     <FormControl.Feedback />
                     <br />
                     <ControlLabel>Password</ControlLabel>
                     <FormControl
-                      type="text"
-                      value={this.state.value}
+                      type="password"
+                      value={this.state.loginPass}
                       placeholder="password"
-                      onChange={this.handleChange}/>
+                      onChange={this.handleLoginPassChange}/>
                     <FormControl.Feedback />
                   </FormGroup>
                   <div className="loginSubmit">
-                    <Button type="submit" bsStyle="primary" block>Log in</Button>
+                    <Button type="submit" bsStyle="primary" block onClick={this.hadleLogin}>Log in</Button>
                   </div>
               </Modal.Body>
             </Modal>

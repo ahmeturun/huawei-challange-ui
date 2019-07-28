@@ -1,0 +1,10 @@
+.pullRightBtns {
+    margin-left: calc(100% - 130px);
+}
+.pullRightSave {
+    margin-left: 10px;
+}
+.listTable {
+    width: calc(100% - 50px);
+    margin: auto;
+}

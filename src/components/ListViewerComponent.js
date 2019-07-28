@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, ControlLabel, FormControl, FormGroup, Table } from 'react-bootstrap';
+import { Button, ControlLabel, FormControl, FormGroup, Table } from 'react-bootstrap';
 import NavbarComponent from './NavbarComponent.js';
 import ToDoItemComponent from './TodoItemComponent.js';
 import Authentication from './../common/authentication.js';
@@ -13,6 +13,15 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Enumerable from 'linq';
 
 class EditListFormatter extends React.Component {
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+
+        }
+    }
+    handleEditList = () => {
+        
+    }
     render() {
       return (
         <Button><FontAwesomeIcon icon={faEdit} /></Button>
@@ -51,6 +60,19 @@ class CustomInsertModal extends React.Component {
         });
     }
 
+    handleRemoveItem = () => {
+        for (let i = this.state.listItemValues.items.length-1; i >= 0; i--) {
+            if (this.state.listItemValues.items[i].selected) {
+                this.state.listItemValues.items.splice(i, 1);
+                this.state.listItems.splice(i,1);
+                this.setState({
+                    numOfListItems: this.state.numOfListItems - 1
+                });
+                i--;
+            }
+        }
+    }
+
     handleSaveBtnClick = () => {
         const { columns, onSave } = this.props;
         const newRow = {};
@@ -87,6 +109,7 @@ class CustomInsertModal extends React.Component {
             if (response.ok) {
                 response.json().then((res) => {
                     console.log(res);
+                    newRow.id = res.id;
                     onSave(newRow);
                 });
             }
@@ -101,6 +124,9 @@ class CustomInsertModal extends React.Component {
     handleListItemValueChanges = (listItemValues) => {
         this.setState({
             listItemValues: listItemValues
+        });
+        this.setState({
+            numOfListItems: listItemValues.items.length
         });
     }
   
@@ -139,18 +165,17 @@ class CustomInsertModal extends React.Component {
                 />
                 <br />
                 <Button onClick={this.handleAddItem}>Add Item</Button>
+                <Button onClick={this.handleRemoveItem}>Remove Item</Button>
                 <br />
                 <ControlLabel>List Items:</ControlLabel>
                 <Table striped bordered condensed hover responsive={false}>
                     <thead>
                         <tr>
-                        <th>#</th>
+                        <th></th>
                         <th>Item Name</th>
                         <th>Description</th>
                         <th>Deadline</th>
                         <th>Status</th>
-                        <th>Dependents</th>
-                        <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody>{this.state.listItems}</tbody>
@@ -212,6 +237,7 @@ class ListViewer extends React.Component {
                         console.log(res);
                         this.setState({listItems: res.map((el, ind)  => {
                             let obj = {
+                                id: el.id,
                                 name: el.name,
                                 items: el.toDoItems
                             }
@@ -232,17 +258,37 @@ class ListViewer extends React.Component {
         // const items = [];
 
         const onAfterInsertRow = (row) => {
-            let newRowStr = '';
-          
-            for (const prop in row) {
-              newRowStr += prop + ': ' + row[prop] + ' \n';
-            }
-            alert('The new row is:\n ' + newRowStr);
+        }
+
+        const onAfterDeleteRow = (rowKeys) => {
+            fetch(`http://localhost:8090/DeleteList?id=${rowKeys}`, {
+                method: 'DELETE',
+                headers: {
+                    'sessionId': Authentication.getSessionId(),
+                },
+            })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then((res) => {
+                        console.log(res);
+                    });
+                }
+                else {
+                    response.text().then((res) => {
+                        alert(JSON.parse(res).error);
+                    });
+                }
+            });
         }
 
         const options = {
             afterInsertRow: onAfterInsertRow,
-            insertModal: this.createCustomModalForAddList
+            insertModal: this.createCustomModalForAddList,
+            afterDeleteRow: onAfterDeleteRow 
+        };
+
+        const selectRowProp = {
+            mode: 'checkbox'
         };
 
         return (
@@ -252,10 +298,11 @@ class ListViewer extends React.Component {
                 <div className="listTable">
                     {this.state.listsRetrieved 
                         ? 
-                        (<BootstrapTable data={this.state.listItems} striped={true} hover={true} insertRow={ true } options={ options }>
-                            <TableHeaderColumn dataField="name" isKey={true} dataSort={true}>List Name</TableHeaderColumn>
+                        (<BootstrapTable data={this.state.listItems} striped={true} hover={true} selectRow={ selectRowProp }
+                            insertRow={ true } deleteRow={ true } options={ options }>
+                            <TableHeaderColumn dataField="id" hidden isKey={true} dataSort={true}></TableHeaderColumn>
+                            <TableHeaderColumn dataField="name" dataSort={true}>List Name</TableHeaderColumn>
                             <TableHeaderColumn dataField="edit" dataSort={false} dataFormat={ editListFormatter } width="90">Edit</TableHeaderColumn>
-                            <TableHeaderColumn dataField="edit" dataSort={false} dataFormat={ editListFormatter } width="90">Remove</TableHeaderColumn>
                         </BootstrapTable>)
                         : null}
                 </div>

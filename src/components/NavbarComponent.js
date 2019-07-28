@@ -28,7 +28,7 @@ export default class NavbarComponent extends React.Component {
             return <Redirect to='/signin' />
         }
         return Authentication.checkUser() ? (
-            <Navbar inverse fluid>
+            <Navbar fluid>
                 <Navbar.Header>
                     <Navbar.Brand>
                     <a href="#">ToDo List App</a>

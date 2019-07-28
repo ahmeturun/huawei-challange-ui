@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FormControl, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Checkbox, FormControl, DropdownButton, MenuItem } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,10 +10,10 @@ export default class ToDoItemComponent extends React.Component {
         this.state = {
             itemKey: this.props.itemKey,
             listItemValues: this.props.listItemValues,
-            name: this.props.name,
-            description: this.props.description,
-            deadline: this.props.deadline,
-            dependents: this.props.dependents,
+            name: '',
+            description: '',
+            deadline: '',
+            dependents: '',
             selectedStatus: {
                 title: "not complete",
                 key: '2'
@@ -47,26 +47,26 @@ export default class ToDoItemComponent extends React.Component {
 
     handleStatusDropdown = (eventKey, event) => {
         switch (eventKey){
+            case '0':
+                this.setState({
+                    selectedStatus: {
+                        key: '0',
+                        title: "complete"
+                    }
+                })
+                break;
             case '1':
                 this.setState({
                     selectedStatus: {
                         key: '1',
-                        title: "complete"
+                        title: "not complete"
                     }
-                })
+                });
                 break;
             case '2':
                 this.setState({
                     selectedStatus: {
                         key: '2',
-                        title: "not complete"
-                    }
-                });
-                break;
-            case '3':
-                this.setState({
-                    selectedStatus: {
-                        key: '3',
                         title: "expired"
                     }
                 });
@@ -75,10 +75,15 @@ export default class ToDoItemComponent extends React.Component {
         }
     }
 
+    handleItemSelected = (e) => {
+        this.state.listItemValues.items[this.state.itemKey].selected = e.target.checked
+        this.props.updateListItemValues(this.state.listItemValues);
+    }
+
     render() {
         return (
             <tr>
-                <td>1</td>
+                <td><Checkbox inline onClick={this.handleItemSelected}></Checkbox></td>
                 <td><FormControl
                     type="text"
                     value={this.state.name}
@@ -100,17 +105,11 @@ export default class ToDoItemComponent extends React.Component {
                     id={`dropdown-basic-1`}
                     onSelect={this.handleStatusDropdown}
                     >
-                        <MenuItem eventKey="1">complete</MenuItem>
-                        <MenuItem eventKey="2">not complete</MenuItem>
-                        <MenuItem eventKey="3">expired</MenuItem>
+                        <MenuItem eventKey="0">complete</MenuItem>
+                        <MenuItem eventKey="1">not complete</MenuItem>
+                        <MenuItem eventKey="2">expired</MenuItem>
                     </DropdownButton>
                 </td>
-                <td><FormControl
-                    type="text"
-                    value={this.state.dependents}
-                    onChange={this.handleDependentsChange}
-                /></td>
-                <td><Button><FontAwesomeIcon icon={faTimes} /></Button></td>
             </tr>
         )
     }

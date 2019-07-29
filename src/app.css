@@ -8,3 +8,10 @@
     width: calc(100% - 50px);
     margin: auto;
 }
+
+.fade.modal-backdrop.in {
+    z-index: 1;
+}
+div.fade.in.modal{
+    z-index: 1 !important;
+}

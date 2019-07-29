@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ControlLabel, FormControl, FormGroup, Table } from 'react-bootstrap';
+import { Button, ControlLabel, FormControl, FormGroup, Table, Modal } from 'react-bootstrap';
 import NavbarComponent from './NavbarComponent.js';
 import ToDoItemComponent from './TodoItemComponent.js';
 import Authentication from './../common/authentication.js';
@@ -16,16 +16,63 @@ class EditListFormatter extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-
+            activeCell: this.props.active,
+            showEditModal: false,
+            listItems: [{
+                name:'test',
+                description: 'description',
+                deadline: 'deadline',
+                status: 'status',
+                dependents: 'dependents'
+            }]
         }
     }
     handleEditList = () => {
         
     }
+
+    handleEditButton = () => {
+        this.setState({showEditModal:true})
+    }
+
     render() {
-      return (
-        <Button><FontAwesomeIcon icon={faEdit} /></Button>
-      );
+        const selectRowProp = {
+            mode: 'checkbox'
+        };
+
+        function onAfterInsertRow(row) {
+            let newRowStr = '';
+
+            for (const prop in row) {
+                newRowStr += prop + ': ' + row[prop] + ' \n';
+            }
+            alert('The new row is:\n ' + newRowStr);
+        }
+
+        const options = {
+            afterInsertRow: onAfterInsertRow 
+        };
+        return (
+            <div>
+                <Button onClick={this.handleEditButton}><FontAwesomeIcon icon={faEdit} /></Button>
+                <Modal bsSize="large" show={this.state.showEditModal} style={{ opacity: 1 }} onHide={this.handleClose}>
+                    <Modal.Header>
+                        <Modal.Title>Login</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <BootstrapTable data={this.state.listItems} striped={true} selectRow={selectRowProp}
+                            insertRow={true} deleteRow={true} options={options}>
+                            <TableHeaderColumn dataField="id2" hidden isKey={true} dataSort={true}></TableHeaderColumn>
+                            <TableHeaderColumn dataField="itemName" dataSort={true}>Name</TableHeaderColumn>
+                            <TableHeaderColumn dataField="itemDescription" dataSort={true}>Description</TableHeaderColumn>
+                            <TableHeaderColumn dataField="itemDeadline" dataSort={false}>Deadline</TableHeaderColumn>
+                            <TableHeaderColumn dataField="itemStatus" dataSort={false}>Status</TableHeaderColumn>
+                            <TableHeaderColumn dataField="itemDependents" dataSort={false}>Dependents</TableHeaderColumn>
+                        </BootstrapTable>
+                    </Modal.Body>
+                </Modal>
+            </div>
+        );
     }
 }
 
@@ -93,7 +140,8 @@ class CustomInsertModal extends React.Component {
                 return {
                     name: el.name,
                     description: el.description,
-                    deadline: el.deadline   
+                    deadline: el.deadline,
+                    status: el.status
                 }
             }).toArray()
         }
@@ -146,7 +194,8 @@ class CustomInsertModal extends React.Component {
                   name:'',
                   description:'',
                   deadline:'',
-                  dependents:''
+                  dependents:'',
+                  status
               }
           }
           this.state.listItems.push(<ToDoItemComponent key={i} itemKey={i} 

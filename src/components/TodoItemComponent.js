@@ -73,6 +73,8 @@ export default class ToDoItemComponent extends React.Component {
                 break;
             default:
         }
+        this.state.listItemValues.items[this.state.itemKey].status = eventKey;
+        this.props.updateListItemValues(this.state.listItemValues);
     }
 
     handleItemSelected = (e) => {

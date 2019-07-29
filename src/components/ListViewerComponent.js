@@ -55,7 +55,7 @@ class EditListFormatter extends React.Component {
         return (
             <div>
                 <Button onClick={this.handleEditButton}><FontAwesomeIcon icon={faEdit} /></Button>
-                <Modal bsSize="large" show={this.state.showEditModal} style={{ opacity: 1 }} onHide={this.handleClose}>
+                <Modal bsSize="large" backdrop={false} show={this.state.showEditModal} style={{ opacity: 1 }} onHide={this.handleClose}>
                     <Modal.Header>
                         <Modal.Title>Login</Modal.Title>
                     </Modal.Header>
@@ -141,7 +141,7 @@ class CustomInsertModal extends React.Component {
                     name: el.name,
                     description: el.description,
                     deadline: el.deadline,
-                    status: el.status
+                    status: el.status ? '0' : el.status
                 }
             }).toArray()
         }
@@ -195,7 +195,7 @@ class CustomInsertModal extends React.Component {
                   description:'',
                   deadline:'',
                   dependents:'',
-                  status
+                  status:'0'
               }
           }
           this.state.listItems.push(<ToDoItemComponent key={i} itemKey={i} 

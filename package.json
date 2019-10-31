@@ -22,7 +22,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/react-fontawesome": "^0.1.4",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "file-loader": "^4.1.0",
     "linq": "^3.2.0",
     "react": "^15.6.1",
